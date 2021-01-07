@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     env:
       XC_VERSION: ${{ '12.1' }}
-      XC_PROJECT: ${{ '.xcodeproj' }}
+      XC_PROJECT: ${{ 'CICDExample.xcodeproj' }}
       XC_SCHEME: ${{ 'CICDExample' }}
     steps:
     - name: Select latest Xcode
@@ -44,7 +44,10 @@ jobs:
         keychain add-certificates --certificate ~/Library/MobileDevice/Certificates/certificate.p12 --certificate-password ${{ secrets.CERTIFICATES_P12_PASSWORD }}
     - name: Build archive
       run: |  
-        xcodebuild -project "$XC_PROJECT" -configuration Release -scheme "$XC_SCHEME" -derivedDataPath DerivedData -archivePath DerivedData/Archive/CICDExample archive
+        rm -rf Build
+        mkdir Build
+        xcodebuild -project "$XC_PROJECT" -scheme "$XC_SCHEME" -archivePath  Build/CICDExample.xcarchive archive
     - name: Export Archive
       run: |
-        xcodebuild -exportArchive -archivePath DerivedData/Archive/CICDExample.xcarchive -exportOptionsPlist provisioning/App-Store.plist -exportPath DerivedData/ipa
+        echo "{\"method\":\"development\"}" | plutil -convert xml1 -o Build/exportOptions.plist -- -
+        xcodebuild -exportArchive -archivePath Build/CICDExample.xcarchive -exportPath Build/ -exportOptionsPlist Build/ExportOptions.plist
