@@ -47,7 +47,7 @@ jobs:
         cd CICDExample/
         rm -rf Build
         mkdir Build
-        xcodebuild -allowProvisioningUpdates -project "$XC_PROJECT" -scheme "$XC_SCHEME" -archivePath  Build/CICDExample.xcarchive archive
+        xcodebuild -project "$XC_PROJECT" -scheme "$XC_SCHEME" -archivePath  Build/CICDExample.xcarchive archive -configuration Release build CODE_SIGNING_ALLOWED=NO
     - name: Export Archive
       run: |
         echo "{\"method\":\"development\"}" | plutil -convert xml1 -o Build/exportOptions.plist -- -
