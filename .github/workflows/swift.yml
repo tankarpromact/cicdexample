@@ -44,6 +44,7 @@ jobs:
         keychain add-certificates --certificate ~/Library/MobileDevice/Certificates/certificate.p12 --certificate-password ${{ secrets.CERTIFICATES_P12_PASSWORD }}
     - name: Build archive
       run: |  
+        cd CICDExample/
         rm -rf Build
         mkdir Build
         xcodebuild -project "$XC_PROJECT" -scheme "$XC_SCHEME" -archivePath  Build/CICDExample.xcarchive archive
